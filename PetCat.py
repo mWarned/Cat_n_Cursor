@@ -1,4 +1,6 @@
 import cv2
+import math
+import time
 
 class PetCat:
     def __init__(self):
@@ -32,22 +34,18 @@ class PetCat:
             cv2.destroyWindow(self.window_name)
             self.window_visible = False
 
-    def chases(self, cursorX: int, cursorY: int) -> None:
+    def chases(self, cursorX: int, cursorY: int, speed: float = 8) -> None:
         cords = cv2.getWindowImageRect("cat")
         catX = cords[0] + int(cords[2] / 2)
         catY = cords[1] + int(cords[3] / 2)
 
-        print(f"Cat - {catX} : {catY} | Cursor - {cursorX} : {cursorY}")
+        dx = cursorX - catX
+        dy = cursorY - catY
 
-        if cursorX > catX and cursorY > catY:
-            if (cursorX - catX > 20) and (cursorY - catY > 20) :
-                cv2.moveWindow(self.window_name, cords[0] + 20, cords[1] + 20)
-        elif cursorX > catX and cursorY < catY :
-            if (cursorX - catX > 20) and (catY - cursorY > 20) :
-                cv2.moveWindow(self.window_name, cords[0] + 20, cords[1] - 20)
-        elif cursorX < catX and cursorY > catY :
-            if (catX - cursorX > 20) and (cursorY - catY > 20) :
-                cv2.moveWindow(self.window_name, cords[0] - 20, cords[1] + 20)
-        else :
-            if (catX - cursorX > 20) and (catY - cursorY > 20) :
-                cv2.moveWindow(self.window_name, cords[0] - 20, cords[1] - 20)
+        chase_distance = math.sqrt(dx*dx + dy*dy)
+
+        if chase_distance > 50:
+            new_x = int(catX + ((dx/chase_distance) * speed)) - 50
+            new_y = int(catY + ((dy/chase_distance) * speed)) - 50
+
+            cv2.moveWindow(self.window_name, new_x, new_y)

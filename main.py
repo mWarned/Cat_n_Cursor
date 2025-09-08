@@ -29,5 +29,5 @@ if __name__ == '__main__':
             pet.show_cat()
             pet.chases(cursorX, cursorY)
         else:
-            print("sleep")
-        sleep(0.2)
+            print("Cat sleeps")
+        sleep(0.02)
